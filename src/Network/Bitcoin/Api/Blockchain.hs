@@ -38,6 +38,15 @@ getBlock client hash =
 
   in fmap Btc.decode <$> I.callMaybe client "getblock" configuration
 
+-- | Gets a block based on its hash.
+getBlockRaw :: T.Client     -- ^ Our session context
+         -> HS.HexString -- ^ Hexadecimal representation of the hash of a block
+         -> IO (Maybe HS.HexString) -- ^ The serialized block
+getBlockRaw client hash =
+  let configuration = [toJSON hash, toJSON False]
+
+  in I.callMaybe client "getblock" configuration
+
 -- | Gets a block header based on its hash.
 getBlockHeader :: T.Client          -- ^ Our session context
          -> HS.HexString            -- ^ Hexadecimal representation of the hash of a block
@@ -74,4 +83,3 @@ getRawTransaction ::
     -> IO (Maybe HS.HexString)  -- ^ Hex-encoded transaction
 getRawTransaction client txid =
   I.callMaybe client "getrawtransaction" [toJSON txid, toJSON (0 :: Integer)]
-
