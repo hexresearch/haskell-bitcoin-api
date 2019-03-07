@@ -13,7 +13,7 @@ import           Control.Lens.TH              (makeLenses)
 import           Control.Monad                (mzero)
 
 import           Data.Aeson
-import           Data.Aeson.Types             (emptyArray)
+import           Data.Aeson.Types             (emptyArray, withObject)
 import qualified Data.Text                    as T
 
 import qualified Network.Bitcoin.Api.Internal as I
@@ -103,3 +103,31 @@ estimateFee client maxBlocks =
   let capMaxBlks rawNum = max 2 (min 25 rawNum) in
   I.call client "estimatefee" [toJSON $ capMaxBlks maxBlocks]
 
+data EstimateMode = Conservative | Economical
+  deriving ( Show )
+
+instance ToJSON EstimateMode where
+  toJSON v = case v of
+    Conservative -> String "CONSERVATIVE"
+    Economical -> String "ECONOMICAL"
+
+data EstimateResult = EstimateResult {
+  estimateResFee    :: !(Maybe BT.Btc)
+, estimateResErrors :: !(Maybe [T.Text])
+, estimateResBlocks :: !Int
+}
+
+instance FromJSON EstimateResult where
+  parseJSON = withObject "EstimateResult" $ \o -> EstimateResult
+    <$> o .:? "feerate"
+    <*> o .:? "errors"
+    <*> o .: "blocks"
+
+-- | Estimate transaction fee (in bitcoins per kilobyte) needed to
+--    get a transaction confirmed within specified number of blocks.
+--   Note: only works for num_blocks >= 2
+estimateSmartFee :: T.Client -> Integer -> EstimateMode -> IO EstimateResult
+estimateSmartFee client maxBlocks emode =
+  -- Block number >= 2 && <= 25
+  let capMaxBlks rawNum = max 2 (min 25 rawNum) in
+  I.call client "estimatesmartfee" [toJSON $ capMaxBlks maxBlocks, toJSON emode]
