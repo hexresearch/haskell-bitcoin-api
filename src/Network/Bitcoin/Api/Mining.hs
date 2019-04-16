@@ -16,7 +16,7 @@ generate :: T.Client       -- ^ Our client context
          -> Integer        -- ^ Amount of blocks to generate
          -> IO [Btc.Block] -- ^ The generated blocks
 generate client blocks =
-  let configuration = [toJSON True, toJSON blocks]
+  let configuration = [toJSON blocks]
   in do
     hashes <- I.call client "generate" configuration
     catMaybes <$> mapM (Blockchain.getBlock client) hashes
