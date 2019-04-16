@@ -18,5 +18,5 @@ generate :: T.Client       -- ^ Our client context
 generate client blocks =
   let configuration = [toJSON True, toJSON blocks]
   in do
-    hashes <- I.call client "setgenerate" configuration
+    hashes <- I.call client "generate" configuration
     catMaybes <$> mapM (Blockchain.getBlock client) hashes
