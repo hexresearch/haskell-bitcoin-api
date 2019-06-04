@@ -83,3 +83,13 @@ getRawTransaction ::
     -> IO (Maybe HS.HexString)  -- ^ Hex-encoded transaction
 getRawTransaction client txid =
   I.callMaybe client "getrawtransaction" [toJSON txid, toJSON (0 :: Integer)]
+
+-- | NOTE: Requires enabled transaction index in Bitcoin Core ("txindex" option)
+--      Fetch json-encoded transaction by transaction ID
+getTransaction ::
+    T.Client                    -- ^ Our session context
+    -> BT.TransactionId         -- ^ Transaction ID of transaction to fetch
+    -> Bool                     -- ^ Include whatch only addresses
+    -> IO (Maybe TXI.GetTxInfo)  -- ^ Transaction info
+getTransaction client txid whatchAddr =
+  I.callMaybe client "gettransaction" [toJSON txid, toJSON whatchAddr]
