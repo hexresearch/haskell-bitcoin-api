@@ -34,77 +34,37 @@ instance FromJSON TxInfo where
          <*> o .: "time"
   parseJSON _          = mzero
 
-data GetTxInfo = GetTxInfo {
-    getTxInfoAmount        :: !BT.Btc
-  , getTxInfoFee           :: !BT.Btc
-  , getTxInfoConfirmations :: !Integer
-  , getTxInfoBlockHash     :: !BT.BlockHash
-  , getTxInfoBlockIndex    :: !Int
-  , getTxInfoBlockTime     :: !Word64
-  , getTxInfoTxid          :: !BT.TransactionId
-  , getTxInfoTime          :: !Word64
-  , getTxInfoReceived      :: !Word64
-  , getTxInfoReplaceable   :: !Replacable
-  , getTxInfoHex           :: !Text
-  , getTxInfoDetails       :: ![TxInfoDetails]
+data RawTxInfo = RawTxInfo {
+    rawTxInfoHex           :: !Text
+  , rawTxInfoTxid          :: !BT.TransactionId
+  , rawTxInfoHash          :: !BT.TransactionId
+  , rawTxInfoSize          :: !Int
+  , rawTxInfoVSize         :: !Int
+  , rawTxInfoVersion       :: !Int
+  , rawTxInfoLocktime      :: !Word64
+  , rawTxInfoBlockHash     :: !BT.BlockHash
+  , rawTxInfoConfirmations :: !Integer
+  , rawTxInfoTime          :: !Word64
+  , rawTxInfoBlockTime     :: !Word64
+  -- , rawTxInfoVin           :: ![RawVin]
+  -- , rawTxInfoVout          :: ![RawVout]
 } deriving (Eq, Show)
 
-instance FromJSON GetTxInfo where
-  parseJSON (Object o) = GetTxInfo
-         <$> o .: "amount"
-         <*> o .: "fee"
-         <*> o .: "confirmations"
-         <*> o .: "blockhash"
-         <*> o .: "blockindex"
-         <*> o .: "blocktime"
+instance FromJSON RawTxInfo where
+  parseJSON (Object o) = RawTxInfo
+         <$> o .: "hex"
          <*> o .: "txid"
+         <*> o .: "hash"
+         <*> o .: "size"
+         <*> o .: "vsize"
+         <*> o .: "version"
+         <*> o .: "locktime"
+         <*> o .: "blockhash"
+         <*> o .: "confirmations"
          <*> o .: "time"
-         <*> o .: "timereceived"
-         <*> o .: "bip125-replaceable"
-         <*> o .: "hex"
-         <*> o .: "details"
-  parseJSON _          = mzero
-
-data TxInfoDetails = TxInfoDetails {
-    detailsAddress    :: !Text
-  , detailsCategory   :: !TxCategory
-  , detailsAmount     :: !BT.Btc
-  , detailsLabel      :: !Text
-  , detailsVout       :: !Int
-  , detailsFee        :: !BT.Btc
-  , detailsAbandoned  :: !Bool
-} deriving (Eq, Show)
-
-instance FromJSON TxInfoDetails where
-  parseJSON (Object o) = TxInfoDetails
-         <$> o .: "address"
-         <*> o .: "category"
-         <*> o .: "amount"
-         <*> o .: "label"
-         <*> o .: "vout"
-         <*> o .: "fee"
-         <*> o .: "abandoned"
-  parseJSON _          = mzero
-
-data TxCategory = TxSend | TxReceive
-  deriving (Eq, Show)
-
-instance FromJSON TxCategory where
-  parseJSON (String s) = case s of
-    "send" -> pure TxSend
-    "receive" -> pure TxReceive
-    v -> fail $ "Unknown value for TxInfoDetails " ++ unpack v
-  parseJSON _          = mzero
-
-data Replacable = RepleacableYes | ReplacableNot | ReplacableUnknown
-  deriving (Eq, Show)
-
-instance FromJSON Replacable where
-  parseJSON (String s) = case s of
-    "yes" -> pure RepleacableYes
-    "not" -> pure ReplacableNot
-    "unknown" -> pure ReplacableUnknown
-    v -> fail $ "Unknown value for Replacable " ++ unpack v
+         <*> o .: "blocktime"
+         -- <*> o .: "vin"
+         -- <*> o .: "vout"
   parseJSON _          = mzero
 
 data Vout = Vout {
