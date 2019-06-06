@@ -42,7 +42,7 @@ data RawTxInfo = RawTxInfo {
   , rawTxInfoVSize         :: !Int
   , rawTxInfoVersion       :: !Int
   , rawTxInfoLocktime      :: !Word64
-  , rawTxInfoBlockHash     :: !BT.BlockHash
+  , rawTxInfoBlockHash     :: !(Maybe BT.BlockHash)
   , rawTxInfoConfirmations :: !Integer
   , rawTxInfoTime          :: !Word64
   , rawTxInfoBlockTime     :: !Word64
@@ -59,7 +59,7 @@ instance FromJSON RawTxInfo where
          <*> o .: "vsize"
          <*> o .: "version"
          <*> o .: "locktime"
-         <*> o .: "blockhash"
+         <*> o .:? "blockhash"
          <*> o .: "confirmations"
          <*> o .: "time"
          <*> o .: "blocktime"
