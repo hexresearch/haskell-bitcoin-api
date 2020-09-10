@@ -4,6 +4,7 @@ module Network.Bitcoin.Api.Wallet where
 
 import           Data.Aeson
 import           Data.Aeson.Types
+import           Data.Text (Text)
 
 import qualified Data.HashMap.Strict                          as HM
 
@@ -56,7 +57,7 @@ getAccountBalance client accountId =
 -- | Provides access to a new receiving address filed under the default account.
 --   Intended to be published to another party that wishes to send you money.
 newAddress :: T.Client         -- ^ Our client context
-           -> IO BT.Address    -- ^ The address created
+           -> IO Text    -- ^ The address created
 newAddress client =
   I.call client "getnewaddress" emptyArray
 
