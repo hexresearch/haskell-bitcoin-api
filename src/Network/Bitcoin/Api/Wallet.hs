@@ -12,6 +12,18 @@ import qualified Data.Bitcoin.Types                           as BT
 import qualified Network.Bitcoin.Api.Internal                 as I
 import qualified Network.Bitcoin.Api.Types                    as T
 import           Network.Bitcoin.Api.Types.UnspentTransaction (UnspentTransaction)
+import           Network.Bitcoin.Api.Types.ReceivedByAddress  (ReceivedByAddress)
+
+
+listReceivedByAddress :: T.Client
+  -> Integer -- ^ Minimum amount of confirmations
+  -> Bool -- ^ Include empty
+  -> Bool -- ^ Include whatch only
+  -> Maybe Text -- ^ Address to check
+  -> IO [ReceivedByAddress]
+listReceivedByAddress client minconf inclEmpty inclWatch maddr = do
+  let configuration = [toJSON minconf, toJSON inclEmpty, toJSON inclWatch, toJSON maddr]
+  I.call client "listreceivedbyaddress" configuration
 
 -- | Lists unspent transaction with default parameters
 listUnspent :: T.Client

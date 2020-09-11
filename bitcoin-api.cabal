@@ -38,10 +38,11 @@ library
   exposed-modules:
       Network.Bitcoin.Api.Client
       Network.Bitcoin.Api.Types
-      Network.Bitcoin.Api.Types.UnspentTransaction
-      Network.Bitcoin.Api.Types.TxInfo
-      Network.Bitcoin.Api.Types.UnspentTxOut
       Network.Bitcoin.Api.Types.HeaderInfo
+      Network.Bitcoin.Api.Types.ReceivedByAddress
+      Network.Bitcoin.Api.Types.TxInfo
+      Network.Bitcoin.Api.Types.UnspentTransaction
+      Network.Bitcoin.Api.Types.UnspentTxOut
       Network.Bitcoin.Api.Blockchain
       Network.Bitcoin.Api.Dump
       Network.Bitcoin.Api.Mining
