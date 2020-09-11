@@ -26,10 +26,9 @@ data ReceivedByAddress = ReceivedByAddress {
 
 instance FromJSON ReceivedByAddress where
   parseJSON = withObject "ReceivedByAddress" $ \o -> ReceivedByAddress
-    <$> o .: "involvesWatchonly"
+    <$> o .:? "involvesWatchonly" .!=  False
     <*> o .: "address"
     <*> o .: "amount"
     <*> o .: "confirmations"
     <*> o .: "label"
     <*> o .: "txids"
-  
