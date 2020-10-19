@@ -4,6 +4,7 @@ module Network.Bitcoin.Api.Mining where
 
 import           Data.Aeson
 import           Data.Maybe
+import           Data.Text (Text)
 
 import qualified Data.Bitcoin.Block             as Btc
 import qualified Data.Bitcoin.Types             as BT
@@ -24,7 +25,7 @@ generate client blocks =
 
 -- | Generate a certain amount of new blocks and send coinbase to given address.
 -- Available in 'regtest' mode only.
-generateToAddress :: T.Client -> Integer -> BT.Address -> IO [Btc.Block]
+generateToAddress :: T.Client -> Integer -> Text -> IO [Btc.Block]
 generateToAddress client blocks addr = do
   let configuration = [toJSON blocks, toJSON addr]
   hashes <- I.call client "generatetoaddress" configuration
