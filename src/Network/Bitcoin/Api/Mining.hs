@@ -6,6 +6,7 @@ import           Data.Aeson
 import           Data.Maybe
 
 import qualified Data.Bitcoin.Block             as Btc
+import qualified Data.Bitcoin.Types             as BT
 
 import qualified Network.Bitcoin.Api.Internal   as I
 import qualified Network.Bitcoin.Api.Types      as T
@@ -20,3 +21,11 @@ generate client blocks =
   in do
     hashes <- I.call client "generate" configuration
     catMaybes <$> mapM (Blockchain.getBlock client) hashes
+
+-- | Generate a certain amount of new blocks and send coinbase to given address.
+-- Available in 'regtest' mode only.
+generateToAddress :: T.Client -> Integer -> BT.Address -> IO [Btc.Block]
+generateToAddress client blocks addr = do
+  let configuration = [toJSON blocks, toJSON addr]
+  hashes <- I.call client "generatetoaddress" configuration
+  catMaybes <$> mapM (Blockchain.getBlock client) hashes
