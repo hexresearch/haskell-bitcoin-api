@@ -125,7 +125,7 @@ importAddress client address label rescan =
 
 -- | Send amount to specified address, returning transaction ID of resulting Tx
 sendToAddress :: T.Client
-              -> BT.Address
+              -> Text
               -> BT.Btc
               -> IO BT.TransactionId
 sendToAddress client address amount =
