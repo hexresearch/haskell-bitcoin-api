@@ -66,6 +66,10 @@ getAccountBalance client accountId =
   -- FIXME: we should use the native 'getbalance' function here
   return . snd . head . filter ((== accountId) . fst) =<< listAccounts client
 
+-- | Returns the amount of Btc currently held in the wallet.
+getBalance :: T.Client -> IO BT.Btc
+getBalance client = I.call client "getbalance" emptyArray
+
 -- | Provides access to a new receiving address filed under the default account.
 --   Intended to be published to another party that wishes to send you money.
 newAddress :: T.Client         -- ^ Our client context
